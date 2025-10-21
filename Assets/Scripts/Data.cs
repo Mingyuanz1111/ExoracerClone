@@ -4,5 +4,7 @@ using UnityEngine;
 
 public class Data : MonoBehaviour
 {
-    public string type;
+    public string type = "none";
+    public string dir;
+    public float val;
 }

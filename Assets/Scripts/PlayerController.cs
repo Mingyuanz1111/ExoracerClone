@@ -111,6 +111,7 @@ public class PlayerController : MonoBehaviour
         if (groundCollider) StartJump();
         else if (slimeCollider)
         {
+            EndJump();
             Flip();
             StartJump();
         }
