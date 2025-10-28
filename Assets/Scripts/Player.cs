@@ -15,6 +15,16 @@ public class Player : MonoBehaviour
     public int groundCount = 0;
     public int slimeCount = 0;
     public int boosterCount = 0;
+    public int hoverCount = 0;
+    public int pullerCount = 0;
+    public int gliderCount = 0;
+    public int swingCount = 0;
+    public int dasherCount = 0;
+    public int jumperCount = 0;
+
+    public Transform center;
+    public float gliderAngle;
+    public float dasherAngle;
 
     public int boosterDir;
     public float boosterSpeed = 15f;
@@ -33,7 +43,7 @@ public class Player : MonoBehaviour
             Die();
         }
 
-        if (boosterCount > 0 && rb.velocity.x < boosterDir * boosterSpeed)
+        if (boosterCount > 0 && Mathf.Abs(rb.velocity.x) < boosterSpeed)
         {
             float vx = rb.velocity.x;
             Vector2 v = new Vector2(((boosterDir == 1 && vx < 0) || (boosterDir == -1 && vx > 0))?0f:vx, rb.velocity.y);
@@ -52,6 +62,12 @@ public class Player : MonoBehaviour
             boosterCount++;
             boosterDir = (data.dir == "R") ? 1 : (-1);
         }
+        if (data.type == "hover") hoverCount++;
+        if (data.type == "puller") { pullerCount++; center = data.trans; }
+        if (data.type == "glider") { gliderCount++; gliderAngle = other.gameObject.transform.eulerAngles.z; }
+        if (data.type == "swing") { swingCount++; center = data.trans; }
+        if (data.type == "dasher") { dasherCount++; dasherAngle = other.gameObject.transform.eulerAngles.z; }
+        if (data.type == "jumper") jumperCount++;
         if (data.type == "spike") Die();
     }
 
@@ -62,6 +78,12 @@ public class Player : MonoBehaviour
         if (data.type == "ground" || data.type == "booster") groundCount--;
         if (data.type == "slime") slimeCount--;
         if (data.type == "booster") boosterCount--;
+        if (data.type == "hover") hoverCount--;
+        if (data.type == "puller") pullerCount--;
+        if (data.type == "glider") gliderCount--;
+        if (data.type == "swing") swingCount--;
+        if (data.type == "dasher") dasherCount--;
+        if (data.type == "jumper") jumperCount--;
     }
 
     public void FaceTo(bool toRight)
@@ -83,6 +105,6 @@ public class Player : MonoBehaviour
         updateCalledTime = Time.time;
         FaceTo(true);
         transform.position = spawnpoint;
-        rb.velocity = spawnpoint;
+        rb.velocity = Vector2.zero;
     }
 }

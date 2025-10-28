@@ -7,4 +7,5 @@ public class Data : MonoBehaviour
     public string type = "none";
     public string dir;
     public float val;
+    public Transform trans;
 }
