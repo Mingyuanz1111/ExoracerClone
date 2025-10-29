@@ -8,9 +8,13 @@ public class Player : MonoBehaviour
     public Vector2 spawnpoint;
 
     private Rigidbody2D rb;
+    public GameObject spriteObject;
+    private SpriteRenderer spr;
 
     public string mode = "Jump";
     public bool facingRight = true;
+    private bool isSpriteSliding = false;
+    public float maxInclination = 45f;
 
     public int groundCount = 0;
     public int slimeCount = 0;
@@ -30,9 +34,13 @@ public class Player : MonoBehaviour
     public float boosterSpeed = 15f;
     public float boosterAcc = 30f;
 
+    public Sprite standingSprite;
+    public Sprite slidingSprite;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spr = spriteObject.GetComponent<SpriteRenderer>();
         spawnpoint = transform.position;
     }
 
@@ -49,6 +57,26 @@ public class Player : MonoBehaviour
             Vector2 v = new Vector2(((boosterDir == 1 && vx < 0) || (boosterDir == -1 && vx > 0))?0f:vx, rb.velocity.y);
             rb.velocity = v + new Vector2(boosterAcc * boosterDir, 0f) * Time.deltaTime;
         }
+
+        if (!isSpriteSliding && Mathf.Abs(rb.velocity.x) > 18f)
+        {
+            spr.sprite = slidingSprite;
+            isSpriteSliding = true;
+        }
+        else if (isSpriteSliding && Mathf.Abs(rb.velocity.x) < 18f)
+        {
+            spr.sprite = standingSprite;
+            isSpriteSliding = false;
+        }
+
+        if (rb.velocity.magnitude > 5)
+        {
+            float angle = Mathf.Atan2(rb.velocity.y, Mathf.Abs(rb.velocity.x)) * Mathf.Rad2Deg;
+            if (angle > 180f) angle -= 360f;
+            angle = Mathf.Clamp(angle, -maxInclination, maxInclination);
+            spriteObject.transform.eulerAngles = new Vector3(0f, 0f, angle * ((facingRight) ? (1) : (-1)));
+        }
+        else spriteObject.transform.eulerAngles = Vector3.zero;
     }
 
     void OnTriggerEnter2D(Collider2D other)

@@ -72,6 +72,7 @@ public class ModeJump : MonoBehaviour
     {
         dasherTimeLeft = 0f;
         timeJumpered = 100000f;
+        ropeObject.SetActive(false);
     }
 
     void Start()
@@ -92,6 +93,50 @@ public class ModeJump : MonoBehaviour
             enterJump = true;
             initialLongJumpVelocity = rb.velocity.x;
             SpacebarEvent();
+
+            if (!startGlider && player.gliderCount > 0)
+            {
+                startGlider = true;
+                rb.gravityScale = 0f;
+                DisableStates();
+            }
+            else if (!startPuller && player.pullerCount > 0)
+            {
+                startPuller = true;
+                centerPos = player.center.position;
+                ropeObject.SetActive(true);
+                rope.to = player.center;
+                rb.gravityScale = 0f;
+                if (((centerPos - (Vector2)transform.position).x > 0) == (dir == -1)) Flip();
+                DisableStates();
+            }
+            else if (!startSwing && player.swingCount > 0)
+            {
+                startSwing = true;
+                swingLength = (player.center.position - transform.position).magnitude;
+                centerPos = player.center.position;
+                ropeObject.SetActive(true);
+                rope.to = player.center;
+                DisableStates();
+            }
+            else if (player.dasherCount > 0)
+            {
+                dasherTimeLeft = dasherDuration;
+                dasherAngle = player.dasherAngle;
+            }
+            else if (player.jumperCount > 0)
+            {
+                timeJumpered = 0;
+                dirJump = dir;
+            }
+            else if (!startHover && player.hoverCount > 0)
+            {
+                startHover = true;
+                float hoverAngleInitial = Mathf.Clamp(Mathf.Atan2(rb.velocity.y, rb.velocity.x * dir) * Mathf.Rad2Deg, hoverAngleMin, hoverAngleMax);
+                hoverInitialVelovityX = rb.velocity.x * dir;
+                timeHovered = (hoverAngleInitial - hoverAngleMin) / (hoverAngleMax - hoverAngleMin) * hoverDuration;
+                dasherTimeLeft = 0f;
+            }
         }
 
         if (Input.GetKey(KeyCode.Space))
@@ -102,7 +147,7 @@ public class ModeJump : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space))
         {
             if (startJump) EndJump();
-            if (startSwing) rb.velocity = new Vector2(Mathf.Max(rb.velocity.x, swingBoost.x), Mathf.Max(rb.velocity.y, swingBoost.y));
+            if (startSwing) rb.velocity = new Vector2(Mathf.Max(rb.velocity.x * dir, swingBoost.x) * dir, rb.velocity.y/*Mathf.Max(rb.velocity.y, swingBoost.y)*/);
 
             startHover = false;
             startPuller = false;
@@ -177,49 +222,6 @@ public class ModeJump : MonoBehaviour
             Flip();
             StartJump();
             DisableStates();
-        }
-        else if (!startGlider && player.gliderCount > 0)
-        {
-            startGlider = true;
-            rb.gravityScale = 0f;
-            DisableStates();
-        }
-        else if(!startPuller && player.pullerCount > 0)
-        {
-            startPuller = true;
-            centerPos = player.center.position;
-            ropeObject.SetActive(true);
-            rope.to = player.center;
-            rb.gravityScale = 0f;
-            if (((centerPos - (Vector2)transform.position).x > 0) == (dir == -1)) Flip();
-            DisableStates();
-        }
-        else if (!startSwing && player.swingCount > 0)
-        {
-            startSwing = true;
-            swingLength = (player.center.position - transform.position).magnitude;
-            centerPos = player.center.position;
-            ropeObject.SetActive(true);
-            rope.to = player.center;
-            DisableStates();
-        }
-        else if (player.dasherCount > 0)
-        {
-            dasherTimeLeft = dasherDuration;
-            dasherAngle = player.dasherAngle;
-        }
-        else if (player.jumperCount > 0)
-        {
-            timeJumpered = 0;
-            dirJump = dir;
-        }
-        else if (!startHover && player.hoverCount > 0)
-        {
-            startHover = true;
-            float hoverAngleInitial = Mathf.Clamp(Mathf.Atan2(rb.velocity.y, rb.velocity.x * dir) * Mathf.Rad2Deg, hoverAngleMin, hoverAngleMax);
-            hoverInitialVelovityX = rb.velocity.x * dir;
-            timeHovered = (hoverAngleInitial - hoverAngleMin) / (hoverAngleMax - hoverAngleMin) * hoverDuration;
-            dasherTimeLeft = 0f;
         }
     }
 
