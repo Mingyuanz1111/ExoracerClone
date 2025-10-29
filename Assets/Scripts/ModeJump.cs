@@ -6,6 +6,7 @@ public class ModeJump : MonoBehaviour
 {
     private float lastUpdateTime = 0f;
 
+    private LevelManager levelManager;
     private Player player;
     public GameObject ropeObject;
     private Rope rope;
@@ -56,7 +57,7 @@ public class ModeJump : MonoBehaviour
     public float maxJumperTime = 0.25f;
     private float timeJumpered = 100000f;
 
-    private float nextSummonTrailTime = 0f;
+    private float nextSummonTrailTime;
     public GameObject trailObject;
 
     void UpdateValues()
@@ -77,6 +78,7 @@ public class ModeJump : MonoBehaviour
 
     void Start()
     {
+        levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         player = GetComponent<Player>();
         rope = ropeObject.GetComponent<Rope>();
         rope.from = transform;
@@ -88,7 +90,12 @@ public class ModeJump : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!levelManager.levelStarted && Input.GetKeyDown(KeyCode.Space))
+        {
+            enterJump = true;
+        }
+
+        if (levelManager.levelStarted && Input.GetKeyDown(KeyCode.Space))
         {
             enterJump = true;
             initialLongJumpVelocity = rb.velocity.x;
@@ -108,7 +115,6 @@ public class ModeJump : MonoBehaviour
                 rope.to = player.center;
                 rb.gravityScale = 0f;
                 if (((centerPos - (Vector2)transform.position).x > 0) == (dir == -1)) Flip();
-                DisableStates();
             }
             else if (!startSwing && player.swingCount > 0)
             {
@@ -117,7 +123,6 @@ public class ModeJump : MonoBehaviour
                 centerPos = player.center.position;
                 ropeObject.SetActive(true);
                 rope.to = player.center;
-                DisableStates();
             }
             else if (player.dasherCount > 0)
             {
@@ -139,12 +144,12 @@ public class ModeJump : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (levelManager.levelStarted && Input.GetKey(KeyCode.Space))
         {
             SpacebarHold();
         }
 
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (/*levelManager.levelStarted && */Input.GetKeyUp(KeyCode.Space))
         {
             if (startJump) EndJump();
             if (startSwing) rb.velocity = new Vector2(Mathf.Max(rb.velocity.x * dir, swingBoost.x) * dir, rb.velocity.y/*Mathf.Max(rb.velocity.y, swingBoost.y)*/);
@@ -188,7 +193,7 @@ public class ModeJump : MonoBehaviour
         if (Time.time >= nextSummonTrailTime)
         {
             Instantiate(trailObject, transform.position, Quaternion.identity);
-            nextSummonTrailTime += 0.05f;
+            nextSummonTrailTime = Time.time + 0.05f;
         }
     }
 

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     public float updateCalledTime = 0f;
     public Vector2 spawnpoint;
 
+    private LevelManager levelManager;
     private Rigidbody2D rb;
     public GameObject spriteObject;
     private SpriteRenderer spr;
@@ -39,6 +41,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         rb = GetComponent<Rigidbody2D>();
         spr = spriteObject.GetComponent<SpriteRenderer>();
         spawnpoint = transform.position;
@@ -46,11 +49,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            Die();
-        }
-
         if (boosterCount > 0 && Mathf.Abs(rb.velocity.x) < boosterSpeed)
         {
             float vx = rb.velocity.x;
@@ -82,7 +80,7 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         Data data = other.gameObject.GetComponent<Data>();
-        if (data == null || data.type == "none") return;
+        if (data == null || data.type == "none") return; Debug.Log(data.type);
         if (data.type == "ground" || data.type == "booster") groundCount++;
         if (data.type == "slime") slimeCount++;
         if (data.type == "booster")
@@ -96,7 +94,7 @@ public class Player : MonoBehaviour
         if (data.type == "swing") { swingCount++; center = data.trans; }
         if (data.type == "dasher") { dasherCount++; dasherAngle = other.gameObject.transform.eulerAngles.z; }
         if (data.type == "jumper") jumperCount++;
-        if (data.type == "spike") Die();
+        if (data.type == "spike") { gameObject.SetActive(false);  Invoke("Die", 1f); }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -130,9 +128,10 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        updateCalledTime = Time.time;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        /*updateCalledTime = Time.time;
         FaceTo(true);
         transform.position = spawnpoint;
-        rb.velocity = Vector2.zero;
+        rb.velocity = Vector2.zero;*/
     }
 }
