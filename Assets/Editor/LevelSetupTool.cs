@@ -13,13 +13,29 @@ public class LevelSetupTool : EditorWindow
         {
             GameObject obj = trans.gameObject;
             bool adjusted = false;
-            Data data = obj.GetComponent<Data>();
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
 
-            if ((obj.name.StartsWith("Ice") || obj.name.StartsWith("Booster")) && data != null && data.trans != null)
+            if (obj.name.StartsWith("Platform") || obj.name.StartsWith("Ice") || obj.name.StartsWith("Booster"))
             {
-                float height = 0.4f / obj.transform.localScale.y; Debug.Log(height);
-                data.trans.localScale = new Vector3(1f, height, 1f);
-                data.trans.localPosition = new Vector3(0f, (1 - height) / 2f, 0f);
+                Transform hitboxTrans = obj.transform.Find("Hitbox");
+                Transform blockTrans = obj.transform.Find("Block");
+                SpriteRenderer srBlock = blockTrans.gameObject.GetComponent<SpriteRenderer>();
+
+                srBlock.size = (Vector2)(hitboxTrans.localScale);
+
+                if (obj.name.StartsWith("Platform")) continue;
+
+                Transform topTrans = obj.transform.Find("Top");
+                SpriteRenderer srTop = topTrans.gameObject.GetComponent<SpriteRenderer>();
+
+                Data data = hitboxTrans.gameObject.GetComponent<Data>();
+
+                float height;
+                if (obj.name.StartsWith("Booster")) height = 0.4f;
+                else height = 0.8f;
+
+                srTop.size = new Vector3((data.dir == "L")?(-1f):(1f) * hitboxTrans.localScale.x, height, 1f);
+                topTrans.localPosition = new Vector3(0, (hitboxTrans.localScale.y - height) / 2f, 1f);
                 adjusted = true;
             }
             else if (obj.name.StartsWith("Glider"))
