@@ -55,7 +55,7 @@ public class LevelManager : MonoBehaviour
         levelStarted = true;
         startTimerText.gameObject.SetActive(false);
         timerText.gameObject.SetActive(true);
-        playerObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        playerObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     public void CompleteLevel()
