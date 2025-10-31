@@ -34,7 +34,8 @@ public class LevelSetupTool : EditorWindow
                 if (obj.name.StartsWith("Booster")) height = 0.4f;
                 else height = 0.8f;
 
-                srTop.size = new Vector3((data.dir == "L")?(-1f):(1f) * hitboxTrans.localScale.x, height, 1f);
+                topTrans.localScale = new Vector3(((data.dir == "L") ? (-1f) : (1f)), 1f, 1f);
+                srTop.size = new Vector3(1 * hitboxTrans.localScale.x, height, 1f);
                 topTrans.localPosition = new Vector3(0, (hitboxTrans.localScale.y - height) / 2f, 1f);
                 adjusted = true;
             }

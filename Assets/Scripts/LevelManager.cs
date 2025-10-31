@@ -78,8 +78,8 @@ public class LevelManager : MonoBehaviour
         }
         else newBestTimeText.SetActive(false);
 
-        timeText.text = "Time     " + ((float)playtimeMs / 1000f).ToString("F3");
-        bestTimeText.text = "Best Time     " + ((float)bestPlaytimeMs / 1000f).ToString("F3");
+        timeText.text = ((float)playtimeMs / 1000f).ToString("F3");
+        bestTimeText.text = ((float)bestPlaytimeMs / 1000f).ToString("F3");
     }
 
     public void MenuButton()
