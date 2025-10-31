@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
 
     public Sprite standingSprite;
     public Sprite slidingSprite;
+    public GameObject deathEffect;
 
     void Start()
     {
@@ -94,7 +95,7 @@ public class Player : MonoBehaviour
         if (data.type == "swing") { swingCount++; center = data.trans; }
         if (data.type == "dasher") { dasherCount++; dasherAngle = other.gameObject.transform.eulerAngles.z; }
         if (data.type == "jumper") jumperCount++;
-        if (data.type == "spike") { gameObject.SetActive(false);  Invoke("Die", 1f); }
+        if (data.type == "spike") { gameObject.SetActive(false); Instantiate(deathEffect, transform.position, Quaternion.identity); Invoke("Die", 1f); }
     }
 
     void OnTriggerExit2D(Collider2D other)
