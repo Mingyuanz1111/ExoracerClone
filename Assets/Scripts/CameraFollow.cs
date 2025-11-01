@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -45,6 +46,14 @@ public class CameraFollow : MonoBehaviour
             Vector3 desiredPosition = currentlyFollow + offset;
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
             transform.position = smoothedPosition;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            ScreenCapture.CaptureScreenshot("screenshot_" + SceneManager.GetActiveScene().name + ".png");
         }
     }
 }

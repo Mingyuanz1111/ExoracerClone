@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4378418449669858091}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -71,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1117380629
+  m_SortingLayer: 2
+  m_SortingOrder: -5
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0.9543753, b: 0.41194963, a: 1}
   m_FlipX: 0
@@ -97,4 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 326ea6d76cbbbcb4da629c1853e3823a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  decayTime: 1
+  type: 0
+  trailColor:
+  - {r: 0.8962264, g: 0.8962264, b: 0.8962264, a: 0}
+  - {r: 1, g: 0.61085975, b: 0, a: 0}
+  trailSize:
+  - 0.8
+  - 1.1
+  decayDuration: 0.5
