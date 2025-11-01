@@ -10,6 +10,8 @@ public class LevelManager : MonoBehaviour
     public bool levelStarted = false;
     public bool levelCompleted = false;
     public float levelTimer = 0f;
+    public float maxAfkTime = 60f;
+    public float afkTimer = 0f;
 
     private GameObject menuScreen;
     private GameObject completeScreen;
@@ -35,7 +37,11 @@ public class LevelManager : MonoBehaviour
 
     void Update()
     {
-        levelTimer += Time.deltaTime;
+        afkTimer += Time.deltaTime;
+        if (afkTimer > maxAfkTime) LoadMainMenuButton();
+        if (Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0)) afkTimer = 0f;
+
+            levelTimer += Time.deltaTime;
         if (levelStarted && Input.GetKeyDown(KeyCode.Escape))
         {
             MenuButton();
@@ -66,6 +72,7 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 0f;
         timerText.gameObject.SetActive(false);
         completeScreen.SetActive(true);
+        menuScreen.SetActive(false);
         TextMeshProUGUI timeText = GameObject.Find("Time Text").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI bestTimeText = GameObject.Find("Best Time Text").GetComponent<TextMeshProUGUI>();
         int playtimeMs = (int)Mathf.Floor((levelTimer - 1.5f) * 1000f);
@@ -78,12 +85,13 @@ public class LevelManager : MonoBehaviour
         }
         else newBestTimeText.SetActive(false);
 
-        timeText.text = "Time     " + ((float)playtimeMs / 1000f).ToString("F3");
-        bestTimeText.text = "Best Time     " + ((float)bestPlaytimeMs / 1000f).ToString("F3");
+        timeText.text = ((float)playtimeMs / 1000f).ToString("F3");
+        bestTimeText.text = ((float)bestPlaytimeMs / 1000f).ToString("F3");
     }
 
     public void MenuButton()
     {
+        if (levelCompleted) return;
         menuScreen.SetActive(!menuScreen.activeSelf);
     }
 

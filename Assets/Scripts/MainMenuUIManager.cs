@@ -17,4 +17,9 @@ public class MainMenuUIManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void ShowButton(GameObject obj)
+    {
+        obj.SetActive(!obj.activeSelf);
+    }
 }

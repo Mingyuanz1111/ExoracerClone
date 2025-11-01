@@ -192,8 +192,12 @@ public class ModeJump : MonoBehaviour
         
         if (Time.time >= nextSummonTrailTime)
         {
-            Instantiate(trailObject, transform.position, Quaternion.identity);
-            nextSummonTrailTime = Time.time + 0.05f;
+            GameObject trail = Instantiate(trailObject, transform.position, Quaternion.identity);
+            nextSummonTrailTime = Time.time + 0.03f;
+
+            Decay dc = trail.GetComponent<Decay>();
+            if (Mathf.Abs(rb.velocity.x) < 18f) dc.type = 0;
+            else dc.type = 1;
         }
     }
 

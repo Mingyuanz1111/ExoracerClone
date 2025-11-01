@@ -379,6 +379,7 @@ MonoBehaviour:
   boosterAcc: 200
   standingSprite: {fileID: 21300000, guid: bb51039558f7eab49a44e7e601861d71, type: 3}
   slidingSprite: {fileID: 21300000, guid: 77af385c9080313488c4c09d2fe025a2, type: 3}
+  deathEffect: {fileID: 5552196731330140820, guid: 2a0f0963716c10a428235449674b766d, type: 3}
 --- !u!114 &7767052606079020687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,8 +599,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1117380629
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bb51039558f7eab49a44e7e601861d71, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
